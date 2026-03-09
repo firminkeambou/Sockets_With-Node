@@ -1,6 +1,9 @@
 let readyPlayersCount = 0; // // we will be changing the hardcoding of readyplayers to use room features of socket.io, if we want that refreshing the page from both players will trigger the game to start;to count how many players are ready
 function listen(io) {
-  io.on('connection', (socket) => {
+  const pongNamespace = io.of('/pong'); // Create a namespace for the Pong game, this allows us to separate the Pong game logic from other potential games or features that might be added to the server in the future. By using a namespace, we can ensure that events related to the Pong game are only handled within that specific namespace, which helps to keep our code organized and maintainable.
+  //many namespaces can be created for different games or features, and clients can connect to the specific namespace they are interested in. This way, we can have multiple games or features running on the same server without interference.
+  //for example // tetrisNamespace = io.of('/tetris'); // Create a namespace for the Tetris game
+  pongNamespace.on('connection', (socket) => {
     console.log('a user is connected with UUID', socket.id);
     socket.on('ready', () => {
       console.log(`Player with UUID ${socket.id} is ready to play!`);
@@ -9,7 +12,7 @@ function listen(io) {
       if (readyPlayersCount % 2 === 0) {
         console.log('Both players are ready. Starting the game!');
         //broadcasting events. You can emit an event to both players to start the game
-        io.emit('startGame', socket.id); // socket.id is choosen as a referee Id, the last connected user //this will send a 'startGame' event to all connected clients, different from socket.broadcast.emit('startGame') which will send the event to all clients except the one that triggered the event. In this case, since we want to start the game for both players, we use io.emit() to ensure that both players receive the 'startGame' event.
+        pongNamespace.emit('startGame', socket.id); // socket.id is choosen as a referee Id, the last connected user //this will send a 'startGame' event to all connected clients, different from socket.broadcast.emit('startGame') which will send the event to all clients except the one that triggered the event. In this case, since we want to start the game for both players, we use io.emit() to ensure that both players receive the 'startGame' event.
       }
     });
     socket.on('paddleMove', (paddleData) => {
@@ -34,7 +37,7 @@ function listen(io) {
       );
       // Here you can implement logic to handle player disconnection, such as resetting the game or notifying the other player
       //readyPlayersCount--; // Reset the ready players count when a player disconnects
-      io.emit('playerDisconnected'); // Notify all clients that a player has disconnected
+      pongNamespace.emit('playerDisconnected'); // Notify all clients that a player has disconnected
     });
   });
 }
