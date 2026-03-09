@@ -1,6 +1,7 @@
 // Canvas Related
 const canvas = document.createElement('canvas');
 const context = canvas.getContext('2d');
+const gameOverEl = document.createElement('div');
 //opening a websocket connection to the server on a specific port, the URL should match the one defined in the server.js file
 //const socket = io('http://localhost:8200/');
 // the above code is replaced with const socket = io(); since we are using the same server for both the API and the WebSocket connections, we can simply call io() without any arguments to connect to the same server that served the webpage, which will automatically connect to the correct URL and port for the WebSocket connection. This way, we can avoid hardcoding the URL and port in the client-side code, making it more flexible and easier to deploy in different environments without needing to change the client-side code.
@@ -36,6 +37,9 @@ let speedX = 0;
 
 // Score for Both Players
 let score = [0, 0]; // score for the player/referee, then the computer (opponent)
+const winningScore = 10; // the score at which the game will end and a winner will be declared
+let isGameOver = true;
+let isNewGame = true;
 
 // Create Canvas Element
 function createCanvas() {
@@ -223,7 +227,24 @@ function startGame() {
     canvas.style.cursor = 'none';
   });
 }
-
+function showGameOverEl(winner) {
+  //Hide Canvas
+  canvas.hidden = true;
+  // Container
+  gameOverEl.textContent = '';
+  gameOverEl.classList.add('game-over-container');
+  // Title
+  const title = document.createElement('h1');
+  title.textContent = `${winner} Wins!`;
+  // Button
+  const playAgainBtn = document.createElement('button');
+  playAgainBtn.setAttribute('onclick', 'startGame()');
+  playAgainBtn.textContent = 'Play Again';
+  // Append
+  gameOverEl.append(title, playAgainBtn);
+  body.appendChild(gameOverEl);
+  renderCanvas();
+}
 // On Load
 loadGame();
 
