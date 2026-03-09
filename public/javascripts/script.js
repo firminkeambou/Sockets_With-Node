@@ -2,9 +2,9 @@
 const canvas = document.createElement('canvas');
 const context = canvas.getContext('2d');
 //opening a websocket connection to the server on a specific port, the URL should match the one defined in the server.js file
-const socket = io('http://localhost:8200/');
-
-//const socket = io(); // Connect to the same server that served the webpage, which will automatically connect to the correct URL and port for the WebSocket connection. This way, we can avoid hardcoding the URL and port in the client-side code, making it more flexible and easier to deploy in different environments without needing to change the client-side code.
+//const socket = io('http://localhost:8200/');
+// the above code is replaced with const socket = io(); since we are using the same server for both the API and the WebSocket connections, we can simply call io() without any arguments to connect to the same server that served the webpage, which will automatically connect to the correct URL and port for the WebSocket connection. This way, we can avoid hardcoding the URL and port in the client-side code, making it more flexible and easier to deploy in different environments without needing to change the client-side code.
+const socket = io(); // Connect to the same server,current port; that served the webpage, which will automatically connect to the correct URL and port for the WebSocket connection. This way, we can avoid hardcoding the URL and port in the client-side code, making it more flexible and easier to deploy in different environments without needing to change the client-side code.
 // defining who is te referee
 let isReferee = false; // by default, there is no referee before the beginning of the game
 let paddleIndex = 0;

@@ -8,7 +8,6 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "start_express": "node api.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
